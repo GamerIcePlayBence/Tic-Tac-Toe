@@ -37,19 +37,14 @@ jobs:
           pyinstaller --noconfirm --clean --onefile --name multi multi.py
           pyinstaller --noconfirm --clean --onefile --name server server.py
 
-      - name: Create ZIP archive
-        shell: pwsh
-        run: |
-          Compress-Archive `
-            -Path dist/multi.py,dist/server.py,dist/single.exe,dist/requirements.txt `
-            -DestinationPath "Tic-Tac-Toe-source-code-${{ github.ref_name }}.zip"
-
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
         run: |
           gh release create "${{ github.ref_name }}" `
-            "Tic-Tac-Toe-source-code-${{ github.ref_name }}.zip" `
+          dist/multi.exe `
+          dist/server.exe `
+          dist/single.exe `
             --title "${{ github.ref_name }}" `
             --generate-notes
